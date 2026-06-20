@@ -1,0 +1,12 @@
+#segreti
+.env
+
+#File di sistema (macOS/Windows)
+.DS_Store
+Thumbs.db
+
+#Database locali e log
+*.db
+*.log
+node_modules
+public/uploads/
