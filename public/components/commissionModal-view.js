@@ -21,9 +21,11 @@ class CommissionModal {
     overlay.className = "auth-overlay";
     overlay.innerHTML = "";
 
-    const body = Auth.isLogged()
-      ? CommissionModal.formTemplate()
-      : CommissionModal.authPromptTemplate();
+    let body;
+    if (!Auth.isLogged()) body = CommissionModal.authPromptTemplate();
+    else if (Auth.hasRole("artist"))
+      body = CommissionModal.artistBlockTemplate();
+    else body = CommissionModal.formTemplate();
     overlay.innerHTML = `<div class="auth-modal">${body}</div>`;
 
     document.body.appendChild(overlay);
@@ -45,6 +47,17 @@ class CommissionModal {
         <p class="text-muted mb-4">Per inviare una richiesta devi essere registrato</p>
         <button class="btn btn-dark me-2" id="goLogin">Accedi</button>
         <button class="btn btn-outline-dark" id=goSignup>Registrati</button>
+    </div>`;
+  }
+
+  static artistBlockTemplate() {
+    return `
+    <div class="p-4 text-center">
+        <button class="auth-close" id="commissionClose" aria-label="Chiudi">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <h4 class="mb-3">Azione non disponibile</h4>
+        <p class="text-muted mb-0">Come artista non puoi richiedere commissioni ad altri artisti.</p>
     </div>`;
   }
 

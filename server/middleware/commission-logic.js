@@ -43,6 +43,14 @@ function autoFilterCommissions(req, res, next) {
 }
 
 async function canCreate(req, res, next) {
+  if (req.user.role === ROLES.ARTIST) {
+    return res
+      .status(403)
+      .json({
+        error:
+          "Gli artisti non possono richiedere commissioni, crea un acc. come cliente",
+      });
+  }
   const { artistId } = req.body;
   if (Number(req.user.id) === Number(artistId)) {
     return res.status(400).json({ error: "Non puoi commissionare te stesso" });
@@ -75,11 +83,9 @@ function validateStatusTransition(req, res, next) {
 
   const allowed = transitions[current] || [];
   if (!allowed.includes(nextStatus))
-    return res
-      .status(400)
-      .json({
-        error: `Transizione da ${current} a ${nextStatus} non permessa`,
-      });
+    return res.status(400).json({
+      error: `Transizione da ${current} a ${nextStatus} non permessa`,
+    });
   next();
 }
 
@@ -88,12 +94,10 @@ function canUpdateCommission(req, res, next) {
 
   if (user.id === commission.clientId) {
     if (commission.status !== STATUS.PENDING) {
-      return res
-        .status(403)
-        .json({
-          error:
-            "Non puoi modificare la richiesta: è già stata accettata o rifiutata",
-        });
+      return res.status(403).json({
+        error:
+          "Non puoi modificare la richiesta: è già stata accettata o rifiutata",
+      });
     }
     return next();
   }
