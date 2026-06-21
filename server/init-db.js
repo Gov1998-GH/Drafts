@@ -10,7 +10,6 @@ const schema = fs.readFileSync(
   "utf8",
 );
 
-
 function run(sql, params = []) {
   return new Promise((resolve, reject) => {
     db.run(sql, params, function (err) {
@@ -62,7 +61,7 @@ async function initDb() {
   const row = await get(
     "SELECT name FROM sqlite_master WHERE type='table' AND name='users'",
   );
-  if (row) return false; 
+  if (row) return false;
   await exec(schema);
   console.log("Database inizializzato da database.sql");
   await seed();
