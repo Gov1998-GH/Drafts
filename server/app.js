@@ -9,6 +9,8 @@ const passport = require("./auth/passport");
 //Inizializzazione App
 const app = express();
 
+app.set("trust proxy", 1);
+
 // Middleware Globali di base
 app.use(morgan("dev")); //logga le richieste (GET /api/users 200)
 app.use(express.json()); //Per leggere il corpo delle richieste (req.body)
@@ -30,7 +32,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === "prodaction",
       sameSite: "lax",
     },
   }),
